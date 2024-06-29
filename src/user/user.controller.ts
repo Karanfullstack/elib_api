@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
+import { CookieOptions, NextFunction, Request, Response } from 'express'
 import createHttpError from 'http-errors'
 import User from '../user/user.model'
-import { hashPassword } from '../utils/hashPassword'
+import { comparePassword, hashPassword } from '../utils/hashPassword'
 import { createToken } from '../utils/jwtService'
 
 const creaseUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,4 +42,45 @@ const creaseUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export { creaseUser }
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body
+    let user
+    try {
+        user = await User.findOne({ email })
+    } catch (error) {
+        return next(createHttpError(400, 'Error in finding user in login'))
+    }
+    if (!user) {
+        return next(createHttpError(400, 'User not found'))
+    }
+    let isPasswordMatch
+    try {
+        isPasswordMatch = await comparePassword(password, user.password)
+    } catch (error) {
+        return next(createHttpError(400, 'Error in comparing password'))
+    }
+
+    if (!isPasswordMatch) {
+        return next(createHttpError(400, 'Invalid password'))
+    }
+
+    const options: CookieOptions = {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+    }
+
+    try {
+        const token = 'Bearer ' + createToken(user)
+
+        return res.status(200).cookie('accessToken', token, options).json({
+            success: true,
+            message: 'User logged in successfully',
+            access_token: token,
+        })
+    } catch (error) {
+        return next(createHttpError(400, 'Error creating token'))
+    }
+}
+
+export { creaseUser, loginUser }

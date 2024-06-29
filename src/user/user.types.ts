@@ -2,9 +2,9 @@ import { z } from 'zod'
 import { Types } from 'mongoose'
 
 export const UserBaseSchema = z.object({
-    name: z.string().min(4, 'Name is required'),
-    email: z.string().min(4, 'email is required'),
-    password: z.string().min(4, 'password is required'),
+    name: z.string().min(4, 'Name must be at least 4 chracter'),
+    email: z.string().min(4, 'email  must be at least 4 chracter').email(),
+    password: z.string().min(4, 'password must be at least 4 chracter'),
 })
 
 const UserEntity = UserBaseSchema.extend({
