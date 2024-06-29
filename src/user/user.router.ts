@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { creaseUser } from './user.controller'
 import Validation from '../middlewares/validations'
-import { UserLoginSchema, UserRegisterSchema } from './user.types'
+import { UserRegisterSchema } from './user.types'
 
 const userRouter = Router()
 
