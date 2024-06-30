@@ -7,7 +7,7 @@ export const UserBaseSchema = z.object({
     password: z.string().min(4, 'password must be at least 4 chracter'),
 })
 
-const UserEntity = UserBaseSchema.extend({
+export const UserEntity = UserBaseSchema.extend({
     _id: z.instanceof(Types.ObjectId),
 })
 
