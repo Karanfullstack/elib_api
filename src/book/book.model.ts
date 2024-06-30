@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 import { BookI } from './book.types'
 
 const BookSchema = new Schema<BookI>(

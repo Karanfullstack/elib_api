@@ -1,6 +1,21 @@
 import { z } from 'zod'
 import { Types } from 'mongoose'
 
+const isValidObjectId = (value: any) => Types.ObjectId.isValid(value)
+
+export const UserValidObjectIdSchema = z.custom(
+    (value) => {
+        if (typeof value === 'string' && isValidObjectId(value)) {
+            return true
+        }
+        return false
+    },
+    {
+        message: 'author must be a valid ObjectId',
+    }
+)
+
+
 export const UserBaseSchema = z.object({
     name: z.string().min(4, 'Name must be at least 4 chracter'),
     email: z.string().min(4, 'email  must be at least 4 chracter').email(),
@@ -8,7 +23,7 @@ export const UserBaseSchema = z.object({
 })
 
 export const UserEntity = UserBaseSchema.extend({
-    _id: z.instanceof(Types.ObjectId),
+    _id: z.string(),
 })
 
 export const UserRegisterSchema = UserBaseSchema

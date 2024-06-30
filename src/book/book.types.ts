@@ -1,13 +1,13 @@
 import { Types } from 'mongoose'
 import { z } from 'zod'
-import User from '../user/user.model'
+import { UserValidObjectIdSchema } from '../user/user.types'
 
 export const BookSchema = z.object({
     title: z.string().min(4, 'title must be at least 4 character'),
     description: z.string(),
-    author: z.instanceof(User),
-    coverImage: z.string(),
-    file: z.string(),
+    coverImage: z.any(),
+    file: z.any(),
+    author: UserValidObjectIdSchema,
     genere: z.string(),
 })
 

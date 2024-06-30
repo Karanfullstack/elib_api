@@ -5,6 +5,7 @@ import bookRouter from './book/book.router'
 
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req: Request, res: Response) => {
     res.send('<h1>Health check</h1>')
