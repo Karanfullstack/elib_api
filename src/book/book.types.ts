@@ -15,5 +15,4 @@ const BookBaseSchema = BookSchema.extend({
     _id: z.instanceof(Types.ObjectId),
 })
 
-
 export type BookI = z.infer<typeof BookBaseSchema>

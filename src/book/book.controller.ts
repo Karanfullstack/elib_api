@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
-import BookModel from './book.model'
 
-const createBook = async (req: Request, res: Response, next: NextFunction) => {
-    const book = await BookModel.find()
+export const createBook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    console.log(req.files)
+    return res.status(200).json({ message: 'Book created' })
 }
