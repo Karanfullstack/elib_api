@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import createHttpError from 'http-errors'
+import { uploadService } from '../utils/upload.service'
 
 export const createBook = async (
     req: Request,
@@ -7,9 +7,9 @@ export const createBook = async (
     next: NextFunction
 ) => {
     const files = req.files as { [fieldname: string]: Express.Multer.File[] }
-
-    // const { title, description, author, coverImage, file, genere } = req.body
-    console.log(req.body)
-    console.log(files)
+    const cover = await uploadService(files, 'coverImage')
+    const pdffile = await uploadService(files, 'file')
+    console.log(pdffile, cover)
+    // console.log(result)
     return res.status(200).json({ message: 'Book created' })
 }

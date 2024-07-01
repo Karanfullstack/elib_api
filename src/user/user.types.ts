@@ -15,7 +15,6 @@ export const UserValidObjectIdSchema = z.custom(
     }
 )
 
-
 export const UserBaseSchema = z.object({
     name: z.string().min(4, 'Name must be at least 4 chracter'),
     email: z.string().min(4, 'email  must be at least 4 chracter').email(),
@@ -23,7 +22,7 @@ export const UserBaseSchema = z.object({
 })
 
 export const UserEntity = UserBaseSchema.extend({
-    _id: z.string(),
+    _id: UserValidObjectIdSchema.optional(),
 })
 
 export const UserRegisterSchema = UserBaseSchema

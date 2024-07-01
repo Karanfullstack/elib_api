@@ -8,7 +8,7 @@ const bookRouter = Router()
 
 bookRouter.post(
     '/',
-
+    
     upload.fields([
         { name: 'coverImage', maxCount: 1 },
         { name: 'file', maxCount: 1 },
@@ -16,5 +16,5 @@ bookRouter.post(
     Validation(BookSchema),
     createBook
 )
-// todo: schema refactor according to multer
+
 export default bookRouter

@@ -1,8 +1,8 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
 import createHttpError from 'http-errors'
 import User from '../user/user.model'
-import { comparePassword, hashPassword } from '../utils/hashPassword'
-import { createToken } from '../utils/jwtService'
+import { comparePassword, hashPassword } from '../utils/hash.service'
+import { createToken } from '../utils/jwt.service'
 
 const creaseUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, name } = req.body

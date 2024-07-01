@@ -9,7 +9,10 @@ const storage: StorageEngine = multer.diskStorage({
         cb(null, Date.now() + file.originalname)
     },
 })
-
+// calculate 10 mb
 export const upload = multer({
     storage,
+    limits: {
+        fieldSize: 10 * 1024 * 1024,
+    },
 })
