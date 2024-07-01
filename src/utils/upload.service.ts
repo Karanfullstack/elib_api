@@ -13,9 +13,7 @@ interface FileI {
     size: number
 }
 
-interface FileUploadServiceI {
-    [key: string]: FileI[]
-}
+type FileUploadServiceI = Record<string, FileI[]>
 
 export const uploadService = async (file: FileUploadServiceI, type: string) => {
     const files = file as FileUploadServiceI
@@ -33,17 +31,3 @@ export const uploadService = async (file: FileUploadServiceI, type: string) => {
     await fs.promises.unlink(filePath)
     return uploaded
 }
-
-// const files = file as FileUploadServiceI
-//     const coverName = files.coverImage[0].filename
-//     const coverPath = path.resolve(__dirname, '../uploads', coverName)
-//     const memeType = files.coverImage[0].mimetype.split('/')[1]
-
-//     const result = await cloudinary.uploader.upload(coverPath, {
-//         filename_override: coverName,
-//         folder: 'book-covers',
-//         format: memeType,
-//     })
-//     await fs.promises.unlink(coverPath)
-//     console.log(result)
-//     return res.status(200).json({ message: 'Book created' })

@@ -9,7 +9,8 @@ export const createBook = async (
     res: Response,
     next: NextFunction
 ) => {
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] }
+   
+    const files = req.files as Record<string, Express.Multer.File[]>
     const { title, description, genere, author } = req.body as BookI
 
     let cover

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { Types } from 'mongoose'
 
-const isValidObjectId = (value: any) => Types.ObjectId.isValid(value)
+const isValidObjectId = (value: string) => Types.ObjectId.isValid(value)
 
 export const UserValidObjectIdSchema = z.custom(
     (value) => {
