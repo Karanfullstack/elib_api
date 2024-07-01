@@ -2,8 +2,10 @@ import express, { Request, Response } from 'express'
 import { globalError } from './middlewares/globalError'
 import userRouter from './user/user.router'
 import bookRouter from './book/book.router'
+import cookieParser from 'cookie-parser'
 
 const app = express()
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

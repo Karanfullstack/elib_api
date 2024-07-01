@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import createHttpError from 'http-errors'
 import { verifyToken } from '../utils/jwt.service'
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
     userId: string
 }
 export const authenticate = (
