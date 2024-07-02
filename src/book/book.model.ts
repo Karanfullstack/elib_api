@@ -17,12 +17,24 @@ const BookSchema = new Schema<BookI>(
             ref: 'User',
         },
         coverImage: {
-            type: String,
-            required: true,
+            id: {
+                type: String,
+                required: true,
+            },
+            secure_url: {
+                type: String,
+                required: true,
+            },
         },
         file: {
-            type: String,
-            required: true,
+            id: {
+                type: String,
+                required: true,
+            },
+            secure_url: {
+                type: String,
+                required: true,
+            },
         },
         genere: {
             type: String,

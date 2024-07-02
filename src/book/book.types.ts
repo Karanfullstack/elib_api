@@ -5,14 +5,19 @@ import { UserValidObjectIdSchema } from '../user/user.types'
 export const BookSchema = z.object({
     title: z.string().min(4, 'title must be at least 4 character'),
     description: z.string(),
-    coverImage: z.any(),
-    file: z.any(),
-    author: UserValidObjectIdSchema,
+    author: UserValidObjectIdSchema.optional(),
     genere: z.string(),
 })
 
 const BookBaseSchema = BookSchema.extend({
     _id: z.instanceof(Types.ObjectId),
+    coverImage: z.object({ id: z.string(), secure_url: z.string() }),
+    file: z.object({ id: z.string(), secure_url: z.string() }),
 })
+
+type UpdateBookKeysI = keyof BookI
+export type BookUpdatePayload = {
+    [key in UpdateBookKeysI]?: string | number
+} & { [key: string]: string }
 
 export type BookI = z.infer<typeof BookBaseSchema>

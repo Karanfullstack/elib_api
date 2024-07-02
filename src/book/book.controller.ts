@@ -12,9 +12,10 @@ export const createBook = async (
 ) => {
     const files = req.files as Record<string, Express.Multer.File[]>
 
-    const { title, description, genere, author } = req.body as BookI
+    const { title, description, genere } = req.body as BookI
     let cover
     let pdffile
+
     try {
         cover = await uploadService(files, 'coverImage')
         pdffile = await uploadService(files, 'file')
@@ -22,13 +23,19 @@ export const createBook = async (
         console.log(error)
         return next(createHttpError(400, 'Error uploading files'))
     }
-    let _req = req as AuthRequest
+    const _req = req as AuthRequest
     try {
         const book = await BookModel.create({
             title,
             description,
-            coverImage: cover.secure_url,
-            file: pdffile.secure_url,
+            coverImage: {
+                id: cover.public_id,
+                secure_url: cover.secure_url,
+            },
+            file: {
+                id: pdffile.public_id,
+                secure_url: pdffile.secure_url,
+            },
             author: _req.userId,
             genere,
         })

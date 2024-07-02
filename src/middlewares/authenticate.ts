@@ -11,7 +11,7 @@ export const authenticate = (
     next: NextFunction
 ) => {
     try {
-        const token = req.header('Authorization')
+        const token = req.header('Authorization') || req.cookies?.accessToken
         if (!token) {
             return next(createHttpError(401, 'Authorized token is required'))
         }
