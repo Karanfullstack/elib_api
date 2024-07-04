@@ -1,6 +1,7 @@
-import { Types } from 'mongoose'
 import { z } from 'zod'
 import { UserValidObjectIdSchema } from '../user/user.types'
+import { Request } from 'express'
+import { Types } from 'mongoose'
 
 export const BookSchema = z.object({
     title: z.string().min(4, 'title must be at least 4 character'),
@@ -10,7 +11,7 @@ export const BookSchema = z.object({
 })
 
 const BookBaseSchema = BookSchema.extend({
-    _id: z.instanceof(Types.ObjectId),
+    // _id: z.instanceof(Types.ObjectId)
     coverImage: z.object({ id: z.string(), secureUrl: z.string() }),
     file: z.object({ id: z.string(), secure_url: z.string() }),
 })
@@ -23,4 +24,10 @@ export type BookUpdatePayload = {
         | { id?: string; secure_url?: string }
 } & { [key: string]: any }
 
+export interface QueryType extends Request {
+    query: {
+        limit?: string
+        page?: string
+    }
+}
 export type BookI = z.infer<typeof BookBaseSchema>

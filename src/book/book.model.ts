@@ -1,6 +1,8 @@
-import { model, Schema } from 'mongoose'
+import mongoose, { model, Schema, Document, Model } from 'mongoose'
 import { BookI } from './book.types'
-const BookSchema = new Schema<BookI>(
+
+interface BookModelI extends Document, BookI {}
+const BookSchema = new Schema<BookModelI, Document>(
     {
         title: {
             type: String,
@@ -43,6 +45,6 @@ const BookSchema = new Schema<BookI>(
     { timestamps: true }
 )
 
-const BookModel = model<BookI>('Book', BookSchema)
+const BookModel: Model<BookModelI> = model<BookModelI>('Book', BookSchema)
 
 export default BookModel

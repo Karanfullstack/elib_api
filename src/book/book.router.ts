@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createBook, updateBook } from './book.controller'
+import { createBook, getAllBooks, updateBook } from './book.controller'
 import { upload } from '../middlewares/multer.middleare'
 import Validation from '../middlewares/validations'
 import { BookSchema } from './book.types'
@@ -26,4 +26,6 @@ bookRouter.put(
     ]),
     updateBook
 )
+
+bookRouter.get('/', getAllBooks)
 export default bookRouter

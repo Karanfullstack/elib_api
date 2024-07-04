@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import createHttpError from 'http-errors'
+
 import { AuthRequest } from '../middlewares/authenticate'
 import { uploadService } from '../utils/upload.service'
 import BookModel from './book.model'
-import { BookI, BookUpdatePayload } from './book.types'
+import { BookI, BookUpdatePayload, QueryType } from './book.types'
 import { deleteCloudinaryImage } from '../utils/delete.service'
+import paginate from '../utils/Paginate.service'
 
+// Create a new book
 export const createBook = async (
     req: Request,
     res: Response,
@@ -48,6 +51,7 @@ export const createBook = async (
     }
 }
 
+// Update a book
 export const updateBook = async (
     req: Request,
     res: Response,
@@ -76,7 +80,7 @@ export const updateBook = async (
 
     const files = req.files as Record<string, Express.Multer.File[]>
     try {
-        if (files?.coverImage && files.coverImage[0]) {
+        if (files?.coverImage && files.coverImage.length > 0) {
             const updatedCoverImage = await uploadService(files, 'coverImage')
             if (updatedCoverImage) {
                 await deleteCloudinaryImage(book.coverImage.id, 'image')
@@ -90,7 +94,7 @@ export const updateBook = async (
         return next(createHttpError(400, 'Error uploading cover image'))
     }
     try {
-        if (files?.file && files.file[0]) {
+        if (files?.file && files.file.length > 0) {
             const updatedFile = await uploadService(files, 'file')
             if (updatedFile) {
                 await deleteCloudinaryImage(book.file.id, 'raw')
@@ -121,4 +125,35 @@ export const updateBook = async (
     }
 }
 
-// TODO NEED TO BE FIXED UPDATE BOOK CONTROLLER DATA NOT ABLE TO RECIEVE FROM REQUEST
+// Get all books
+export const getAllBooks = async (
+    req: QueryType,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { limit = '10', page = '1' } = req.query
+        const options = {
+            limit: parseInt(limit, 10),
+            page: parseInt(page, 10),
+        }
+        const aggregatePipeline = [
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'author',
+                    foreignField: '_id',
+                    as: 'author',
+                },
+            },
+            {
+                $unwind: '$author',
+            },
+        ]
+        const books = await paginate(BookModel, aggregatePipeline, options)
+        return res.json(books)
+    } catch (error) {
+        console.log(error)
+        return next(createHttpError(500, 'error in fetch books'))
+    }
+}
