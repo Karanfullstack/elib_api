@@ -12,6 +12,7 @@ const _configuration = {
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     CLOUDINARY_URL: process.env.CLOUDINARY_URL,
+    FRONTEND_DOMAIN: process.env.FRONTEND_DOMAIN,
 }
 
 export const config = Object.freeze(_configuration)
