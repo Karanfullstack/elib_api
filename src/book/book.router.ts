@@ -1,12 +1,19 @@
 import { Router } from 'express'
-import { createBook, getAllBooks, updateBook } from './book.controller'
+import {
+    createBook,
+    deleteBook,
+    getAllBooks,
+    getSingleBook,
+    updateBook,
+} from './book.controller'
 import { upload } from '../middlewares/multer.middleare'
 import Validation from '../middlewares/validations'
-import { BookSchema } from './book.types'
+import { BookSchema, UpdateBookSchema } from './book.types'
 import { authenticate } from '../middlewares/authenticate'
 
 const bookRouter = Router()
 
+// create a book router
 bookRouter.post(
     '/',
     authenticate,
@@ -17,6 +24,7 @@ bookRouter.post(
     Validation(BookSchema),
     createBook
 )
+// update book router
 bookRouter.put(
     '/:id',
     authenticate,
@@ -24,8 +32,11 @@ bookRouter.put(
         { name: 'coverImage', maxCount: 1 },
         { name: 'file', maxCount: 1 },
     ]),
+    Validation(UpdateBookSchema),
     updateBook
 )
 
 bookRouter.get('/', getAllBooks)
+bookRouter.get('/:id', getSingleBook)
+bookRouter.delete('/:id', deleteBook)
 export default bookRouter

@@ -9,11 +9,7 @@ import { deleteCloudinaryImage } from '../utils/delete.service'
 import paginate from '../utils/Paginate.service'
 
 // Create a new book
-export const createBook = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const createBook = async (req: Request, res: Response, next: NextFunction) => {
     const files = req.files as Record<string, Express.Multer.File[]>
 
     const { title, description, genere } = req.body as BookI
@@ -52,11 +48,7 @@ export const createBook = async (
 }
 
 // Update a book
-export const updateBook = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     let book: BookI | null
     try {
         book = await BookModel.findOne({ _id: req.params.id })
@@ -76,7 +68,7 @@ export const updateBook = async (
             payload[key] = req.body[key]
         }
     })
-    payload.author = _req.userId
+    // payload.author = _req.userId
 
     const files = req.files as Record<string, Express.Multer.File[]>
     try {
@@ -126,7 +118,7 @@ export const updateBook = async (
 }
 
 // Get all books
-export const getAllBooks = async (
+const getAllBooks = async (
     req: QueryType,
     res: Response,
     next: NextFunction
@@ -149,11 +141,59 @@ export const getAllBooks = async (
             {
                 $unwind: '$author',
             },
+            {
+                $project: {
+                    'author.password': 0,
+                },
+            },
         ]
-        const books = await paginate(BookModel, aggregatePipeline, options)
-        return res.json(books)
+
+        try {
+            const books = await paginate(BookModel, aggregatePipeline, options)
+            return res.status(200).json({ success: true, books })
+        } catch (error) {
+            return next(createHttpError(500, 'error in fetch books'))
+        }
     } catch (error) {
         console.log(error)
         return next(createHttpError(500, 'error in fetch books'))
     }
 }
+
+// get single book
+
+const getSingleBook = async (
+    req: QueryType,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { id } = req.params
+        const book = await BookModel.findById(id).populate(
+            'author',
+            '-password'
+        )
+        return res.status(200).json({ success: true, book })
+    } catch (error) {
+        return next(createHttpError(500, 'error in fetch single book'))
+    }
+}
+
+// delte single book by id
+const deleteBook = async (
+    req: QueryType,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { id } = req.params
+        const book = await BookModel.findByIdAndDelete(id)
+        return res
+            .status(200)
+            .json({ success: true, message: 'Book deleted', book })
+    } catch (error) {
+        return next(createHttpError(500, 'error in delete book'))
+    }
+}
+
+export { createBook, updateBook, getAllBooks, getSingleBook, deleteBook }

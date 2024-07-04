@@ -1,7 +1,8 @@
-import { Schema, model } from 'mongoose'
+import { Model, Schema, model, Document } from 'mongoose'
 import { UserI } from './user.types'
 
-const userSchema = new Schema<UserI>(
+interface User extends UserI, Document {}
+const userSchema = new Schema<User>(
     {
         name: {
             type: String,
@@ -25,6 +26,6 @@ const userSchema = new Schema<UserI>(
     { timestamps: true }
 )
 
-const User = model<UserI>('User', userSchema)
+const User: Model<User> = model<User>('User', userSchema)
 
 export default User

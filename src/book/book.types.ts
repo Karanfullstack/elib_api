@@ -1,13 +1,21 @@
+import { Request } from 'express'
 import { z } from 'zod'
 import { UserValidObjectIdSchema } from '../user/user.types'
-import { Request } from 'express'
-import { Types } from 'mongoose'
 
 export const BookSchema = z.object({
     title: z.string().min(4, 'title must be at least 4 character'),
     description: z.string(),
     author: UserValidObjectIdSchema.optional(),
     genere: z.string(),
+})
+
+export const UpdateBookSchema = z.object({
+    title: z.string().min(4, 'title must be at least 4 characters').optional(),
+    description: z.string().optional(),
+    author: UserValidObjectIdSchema.optional(),
+    genere: z.string().optional(),
+    coverImage: z.object({ id: z.string(), secureUrl: z.string() }).optional(),
+    file: z.object({ id: z.string(), secure_url: z.string() }).optional(),
 })
 
 const BookBaseSchema = BookSchema.extend({
@@ -28,6 +36,9 @@ export interface QueryType extends Request {
     query: {
         limit?: string
         page?: string
+    }
+    params: {
+        id?: string
     }
 }
 export type BookI = z.infer<typeof BookBaseSchema>
