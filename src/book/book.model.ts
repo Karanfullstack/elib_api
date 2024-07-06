@@ -1,4 +1,4 @@
-import mongoose, { model, Schema, Document, Model } from 'mongoose'
+import { model, Schema, Document, Model } from 'mongoose'
 import { BookI } from './book.types'
 
 interface BookModelI extends Document, BookI {}
@@ -40,6 +40,11 @@ const BookSchema = new Schema<BookModelI, Document>(
         genere: {
             type: String,
             required: true,
+        },
+        slug: {
+            type: String,
+            required: true,
+            unique: true,
         },
     },
     { timestamps: true }

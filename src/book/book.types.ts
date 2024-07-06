@@ -7,6 +7,7 @@ export const BookSchema = z.object({
     description: z.string(),
     author: UserValidObjectIdSchema.optional(),
     genere: z.string(),
+    slug: z.string(),
 })
 
 export const UpdateBookSchema = z.object({
@@ -30,7 +31,7 @@ export type BookUpdatePayload = {
         | string
         | number
         | { id?: string; secure_url?: string }
-} & { [key: string]: any }
+} & Record<string, unknown>
 
 export interface QueryType extends Request {
     query: {

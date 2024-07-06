@@ -4,8 +4,9 @@
     "description": "",
     "main": "server.ts",
     "scripts": {
-        "dev": "nodemon server.ts",
-        "start": "node server.ts"
+        "dev": "nodemon ./src/server.ts",
+        "start": "node server.ts",
+        "build": "tsc -p ."
     },
     "author": "",
     "license": "ISC",

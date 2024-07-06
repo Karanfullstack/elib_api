@@ -1,18 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import createHttpError from 'http-errors'
-
 import { AuthRequest } from '../middlewares/authenticate'
 import { uploadService } from '../utils/upload.service'
 import BookModel from './book.model'
 import { BookI, BookUpdatePayload, QueryType } from './book.types'
 import { deleteCloudinaryImage } from '../utils/delete.service'
-import paginate from '../utils/Paginate.service'
+import paginate from '../utils/paginate.service'
 
 // Create a new book
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
     const files = req.files as Record<string, Express.Multer.File[]>
 
-    const { title, description, genere } = req.body as BookI
+    const { title, description, genere, slug } = req.body as BookI
     let cover
     let pdffile
 
@@ -28,6 +27,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
         const book = await BookModel.create({
             title,
             description,
+            slug,
             coverImage: {
                 id: cover.public_id,
                 secure_url: cover.secure_url,
@@ -59,10 +59,10 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     if (!book) return next(createHttpError(404, 'book not found'))
 
     const _req = req as AuthRequest
-    if (book.author!.toString() !== _req.userId) {
+    if (book.author?.toString() !== _req.userId) {
         return next(createHttpError(403, 'you are not authorized'))
     }
-    let payload: BookUpdatePayload = {}
+    const payload: BookUpdatePayload = {}
     Object.keys(req.body).forEach((key) => {
         if (req.body[key]) {
             payload[key] = req.body[key]
